@@ -49,27 +49,41 @@ class Saving
     str += ")"
   end
 
+  def my_set_string
+    val_arr = []
+    var_arr = []
+    get_variables.each do |var, value|
+       val_arr << value.to_s
+       var_arr << "#{var} = "[1..-1]
+    end
+
+    str = ""
+    (1..val_arr.length).each do |i|
+      str += %Q[#{var_arr[i]}'#{val_arr[i]}', ]
+    end
+    str = str[0..-7]
+    str
+  end
+
   def save
-
-    if get_variables[id].nil?
-
+    if self.id.nil?
       QuestionDatabase.instance.execute(<<-SQL)
         INSERT INTO
           #{my_table + my_var_string}
         VALUES
           #{my_val_string}
       SQL
-
+      self.id = QuestionDatabase.instance.last_insert_row_id
     else
-
-      QuestionDatabase.instance.execute(<<-SQL)
-      INSERT INTO
-
-      VALUES
+      QuestionDatabase.instance.execute(<<-SQL, self.id)
+      UPDATE
+        #{my_table}
+      SET
+        #{my_set_string}
+      WHERE
+        id = ?
       SQL
-
     end
-
   end
 
 end
@@ -148,7 +162,7 @@ end
 
 
 
-class Question
+class Question < Saving
 
   attr_accessor :id, :title, :body, :author_id
 
@@ -225,7 +239,7 @@ class Question
 
 end
 
-class QuestionFollower
+class QuestionFollower < Saving
 
   attr_accessor :id, :question_id, :user_id
 
@@ -295,7 +309,7 @@ class QuestionFollower
 
 end
 
-class Reply
+class Reply < Saving
   attr_accessor :id, :question_id, :user_id, :parent_id, :body
 
   def initialize(options = {})
@@ -401,7 +415,7 @@ class Reply
 
 end
 
-class QuestionLike
+class QuestionLike < Saving
 
   attr_accessor :id, :question_id, :user_id
 
@@ -491,5 +505,10 @@ testUser = User.find_by_id(3)
 question1 = Question.find_by_id(1)
 reply1 = Reply.find_by_id(1)
 testUser2 = User.new({'id' => nil, 'fname' => 'Jack', 'lname' => 'Bower'})
-#p testUser2.my_val_string
+#p testUser2.my_set_string
+#p testUser2.get_variables
+#
 testUser2.save
+testUser2.fname = 'TESTING'
+testUser2.save
+# p testUser2.id
