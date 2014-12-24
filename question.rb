@@ -16,11 +16,11 @@ class Question
   def self.find_by_id(id)
     results = QuestionDatabase.instance.execute(<<-SQL, id)
     SELECT
-    *
+      *
     FROM
-    questions
+      questions
     WHERE
-    id = ?
+      id = ?
     SQL
 
     results.map { |result| Question.new(result)}[0]
@@ -29,11 +29,11 @@ class Question
   def self.find_by_author_id(author_id)
     results = QuestionDatabase.instance.execute(<<-SQL, author_id)
     SELECT
-    *
+      *
     FROM
-    questions
+      questions
     WHERE
-    author_id = ?
+      author_id = ?
     SQL
 
     results.map { |result| Question.new(result)}
@@ -42,11 +42,11 @@ class Question
   def author
     results = QuestionDatabase.instance.execute(<<-SQL, author_id)
     SELECT
-    *
+      *
     FROM
-    users
+      users
     WHERE
-    id = ?
+      id = ?
     SQL
 
     results.map { |result| User.new(result)}

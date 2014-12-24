@@ -15,11 +15,11 @@ class QuestionFollower
   def self.find_by_id(id)
     results = QuestionDatabase.instance.execute(<<-SQL, id)
     SELECT
-    *
+      *
     FROM
-    question_followers
+      question_followers
     WHERE
-    id = ?
+      id = ?
     SQL
 
     results.map { |result| QuestionFollower.new(result)}[0]
@@ -28,12 +28,12 @@ class QuestionFollower
   def self.followers_for_question_id(question_id)
     results = QuestionDatabase.instance.execute(<<-SQL, question_id)
     SELECT
-    users.id, users.fname, users.lname
+      users.id, users.fname, users.lname
     FROM
-    question_followers JOIN users
-    ON user_id = users.id
+      question_followers JOIN users
+      ON user_id = users.id
     WHERE
-    question_id = ?
+      question_id = ?
     SQL
 
     results.map { |result| User.new(result) }
@@ -42,12 +42,12 @@ class QuestionFollower
   def self.followed_questions_for_user_id(user_id)
     results = QuestionDatabase.instance.execute(<<-SQL, user_id)
     SELECT
-    q.id, q.title, q.body, q.author_id
+      q.id, q.title, q.body, q.author_id
     FROM
-    question_followers JOIN questions q
-    ON question_id = q.id
+      question_followers JOIN questions q
+      ON question_id = q.id
     WHERE
-    user_id = ?
+      user_id = ?
     SQL
 
     results.map { |result| Question.new(result) }
@@ -56,14 +56,14 @@ class QuestionFollower
   def self.most_followed_questions(n)
     results = QuestionDatabase.instance.execute(<<-SQL)
     SELECT
-    q.id, q.title, q.body, q.author_id
+      q.id, q.title, q.body, q.author_id
     FROM
-    question_followers JOIN questions q
-    ON question_id = q.id
+      question_followers JOIN questions q
+      ON question_id = q.id
     GROUP BY
-    question_id
+      question_id
     ORDER BY
-    COUNT(question_id) DESC
+      COUNT(question_id) DESC
     SQL
 
     results.map { |result| Question.new(result) }[0...n]

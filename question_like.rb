@@ -15,11 +15,11 @@ class QuestionLike
   def self.find_by_id(id)
     results = QuestionDatabase.instance.execute(<<-SQL, id)
     SELECT
-    *
+      *
     FROM
-    question_likes
+      question_likes
     WHERE
-    id = ?
+      id = ?
     SQL
 
     results.map { |result| QuestionLike.new(result)}[0]
@@ -28,12 +28,12 @@ class QuestionLike
   def self.likers_for_question_id(question_id)
     results = QuestionDatabase.instance.execute(<<-SQL, question_id)
     SELECT
-    users.id, users.fname, users.lname
+      users.id, users.fname, users.lname
     FROM
-    question_likes JOIN users
-    ON user_id = users.id
+      question_likes JOIN users
+      ON user_id = users.id
     WHERE
-    question_id = ?
+      question_id = ?
     SQL
 
     results.map { |result| User.new(result)}
@@ -42,12 +42,12 @@ class QuestionLike
   def self.liked_questions_for_user_id(user_id)
     results = QuestionDatabase.instance.execute(<<-SQL, user_id)
     SELECT
-    q.id, q.title, q.body, q.author_id
+      q.id, q.title, q.body, q.author_id
     FROM
-    question_likes JOIN questions q
-    ON question_id = q.id
+      question_likes JOIN questions q
+      ON question_id = q.id
     WHERE
-    user_id = ?
+      user_id = ?
     SQL
 
     results.map { |result| Question.new(result)}
@@ -56,12 +56,12 @@ class QuestionLike
   def self.num_likes_for_question_id(question_id)
     results = QuestionDatabase.instance.execute(<<-SQL, question_id)
     SELECT
-    COUNT(*)
+      COUNT(*)
     FROM
-    question_likes JOIN users
-    ON user_id = users.id
+      question_likes JOIN users
+      ON user_id = users.id
     WHERE
-    question_id = ?
+      question_id = ?
     SQL
 
     results[0].values[0]
@@ -70,14 +70,14 @@ class QuestionLike
   def self.most_liked_questions(n)
     results = QuestionDatabase.instance.execute(<<-SQL)
     SELECT
-    q.id, q.title, q.body, q.author_id
+      q.id, q.title, q.body, q.author_id
     FROM
-    question_likes JOIN questions q
-    ON question_id = q.id
+      question_likes JOIN questions q
+      ON question_id = q.id
     GROUP BY
-    question_id
+      question_id
     ORDER BY
-    COUNT(question_id) DESC
+      COUNT(question_id) DESC
     SQL
 
     results.map { |result| Question.new(result) }[0...n]

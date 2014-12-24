@@ -17,11 +17,11 @@ class Reply
   def self.find_by_id(id)
     results = QuestionDatabase.instance.execute(<<-SQL, id)
     SELECT
-    *
+      *
     FROM
-    replies
+      replies
     WHERE
-    id = ?
+      id = ?
     SQL
 
     results.map { |result| Reply.new(result)}[0]
@@ -30,11 +30,11 @@ class Reply
   def self.find_by_question_id(question_id)
     results = QuestionDatabase.instance.execute(<<-SQL, question_id)
     SELECT
-    *
+      *
     FROM
-    replies
+      replies
     WHERE
-    question_id = ?
+      question_id = ?
     SQL
 
     results.map { |result| Reply.new(result)}
@@ -43,11 +43,11 @@ class Reply
   def self.find_by_user_id(user_id)
     results = QuestionDatabase.instance.execute(<<-SQL, user_id)
     SELECT
-    *
+      *
     FROM
-    replies
+      replies
     WHERE
-    user_id = ?
+      user_id = ?
     SQL
 
     results.map { |result| Reply.new(result)}
@@ -56,11 +56,11 @@ class Reply
   def author
     results = QuestionDatabase.instance.execute(<<-SQL, user_id)
     SELECT
-    *
+      *
     FROM
-    users
+      users
     WHERE
-    id = ?
+      id = ?
     SQL
 
     results.map { |result| User.new(result)}
@@ -69,11 +69,11 @@ class Reply
   def question
     results = QuestionDatabase.instance.execute(<<-SQL, user_id)
     SELECT
-    *
+      *
     FROM
-    questions
+      questions
     WHERE
-    id = ?
+      id = ?
     SQL
 
     results.map { |result| Question.new(result)}
@@ -82,11 +82,11 @@ class Reply
   def parent_reply
     results = QuestionDatabase.instance.execute(<<-SQL, parent_id)
     SELECT
-    *
+      *
     FROM
-    replies
+      replies
     WHERE
-    id = ?
+      id = ?
     SQL
 
     results.map { |result| Reply.new(result)}
@@ -95,11 +95,11 @@ class Reply
   def child_replies
     results = QuestionDatabase.instance.execute(<<-SQL, id)
     SELECT
-    *
+      *
     FROM
-    replies
+      replies
     WHERE
-    parent_id = ?
+      parent_id = ?
     SQL
 
     results.map { |result| Reply.new(result)}
